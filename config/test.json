@@ -1,0 +1,3 @@
+{
+	"MONGO_URL": "mongodb://admin:admin48@ds145183.mlab.com:45183/courier-management-test"
+}
