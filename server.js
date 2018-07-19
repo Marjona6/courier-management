@@ -12,6 +12,13 @@ const server = require('http').createServer(app);
 
 require('dotenv').config();
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.text());
+app.use(bodyParser.json({type: 'application/json'}));
+
+require('./routes')(app);
+
 if (config.util.getEnv('NODE_ENV') === 'test') {
 	mongoose.connect(process.env.MONGO_TEST_URL);
 }
@@ -21,21 +28,12 @@ else {
 }
 
 mongoose.connection
-	.on('error', () => {
-		console.error('Mongoose error');
+	.on('error', (err) => {
+		console.error('Mongoose error', err);
 	})
 	.on('open', () => {
 		console.log('Mongoose connected');
 	});
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.text());
-app.use(bodyParser.json({type: 'application/json'}));
-
-require('./routes')(app);
-
-// app.use('/', routes);
 
 server.listen(port, () => {
 	console.log(`Server listening on port ${port}.`);

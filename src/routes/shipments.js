@@ -9,7 +9,7 @@ module.exports = app => {
 		// get a list of all shipments
 		.get('/shipments', async (req, res) => {
 			const shipmentDocs = await ShipmentModel.find({});
-			res.json(shipmentDocs);
+			res.status(200).json(shipmentDocs);
 		})
 
 		// add a discount to a shipment (amount)
@@ -17,9 +17,9 @@ module.exports = app => {
 		// add a discount to a shipment (percentage)
 
 		// get a list of a courier's shipments
-		.get('shipments/courier/:id', async (req, res) => {
+		.get('/shipments/courier/:id', async (req, res) => {
 			const courierShipmentDocs = await ShipmentModel.find({'courier': req.params.id});
-			res.json(courierShipmentDocs);
+			res.status(200).json(courierShipmentDocs);
 		})
 
 		// register a shipment as picked up

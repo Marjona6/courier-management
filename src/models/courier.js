@@ -4,4 +4,5 @@ const courierSchema = new mongoose.Schema({
 	shipments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Shipment'}]
 });
 
-export default CourierModel = mongoose.model('Courier', schema);
+let CourierModel;
+export default CourierModel = mongoose.model('Courier', courierSchema);

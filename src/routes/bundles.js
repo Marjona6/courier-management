@@ -22,9 +22,9 @@ module.exports = app => {
 		// add a discount to a bundle (percentage)
 
 		// get a list of a courier's bundles
-		.get('bundles/courier/:id', async (req, res) => {
+		.get('/bundles/courier/:id', async (req, res) => {
 			const courierBundleDocs = await BundleModel.find({'courier': req.params.id});
-			res.json(courierBundleDocs);
+			res.status(200).json(courierBundleDocs);
 		})
 
 		// register a bundle as picked up
