@@ -4,8 +4,8 @@ const addressSchema = require('./address');
 const costSchema = require('./cost');
 
 const bundleSchema = new mongoose.Schema({
-	origin: addressSchema,
-	destination: addressSchema,
+	// origin: addressSchema, // waiting to hear back about requirements
+	// destination: addressSchema, // waiting to hear back about requirements
 	courier: {type: mongoose.Schema.Types.ObjectId, ref: 'Courier'},
 	shipments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Shipment'}],
 	status: String,
