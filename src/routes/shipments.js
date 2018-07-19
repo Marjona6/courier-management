@@ -1,4 +1,4 @@
-import ShipmentModel from '../models/Shipment';
+import ShipmentModel from '../models/shipment';
 
 const mongoose = require('mongoose');
 const { body } = require('express-validator/check');

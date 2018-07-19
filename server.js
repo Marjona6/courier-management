@@ -33,9 +33,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.text());
 app.use(bodyParser.json({type: 'application/json'}));
 
-const routes = require('./routes');
+require('./routes')(app);
 
-app.use('/', routes);
+// app.use('/', routes);
 
 server.listen(port, () => {
 	console.log(`Server listening on port ${port}.`);

@@ -1,4 +1,4 @@
-import BundleModel from '../models/Bundle';
+import BundleModel from '../models/bundle';
 
 const mongoose = require('mongoose');
 const { body } = require('express-validator/check');
@@ -9,7 +9,7 @@ module.exports = app => {
 		// get a list of all bundles
 		.get('/bundles', async (req, res) => {
 			const bundleDocs = await BundleModel.find({});
-			res.json(bundleDocs);
+			res.status(200).json(bundleDocs);
 		})
 
 		// create a bundle
