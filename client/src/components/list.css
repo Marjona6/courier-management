@@ -1,0 +1,11 @@
+.list ul {
+	list-style: none;
+}
+
+.list table {
+	width: 100%;
+}
+
+.list tbody {
+	border: 1px solid blue;
+}

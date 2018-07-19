@@ -7,6 +7,7 @@
     "dev": "NODE_ENV=development && run-p devtask:**",
     "devtask:server": "nodemon server.js",
     "devtask:client": "npm start --prefix client",
+    "start": "NODE_ENV=production && run-p devtask:**",
     "test": "NODE_ENV=test mocha --timeout 10000 --compilers js:babel-core/register"
   },
   "author": "Meryem Yanar",
