@@ -5,7 +5,8 @@ const Currency = mongoose.Types.Currency;
 let costSchema;
 
 export default costSchema = new mongoose.Schema({
-	originalPrice: {type: Currency, min: 0},
+	originalPrice: {type: Currency, min: 100},
 	discountPercentage: {type: Number, min: 0, max: 100},
-	discountAmount: {type: Currency, min: 0}
+	discountAmount: {type: Currency, min: 0},
+	currentPrice: {type: Currency, min: 0},
 });

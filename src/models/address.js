@@ -5,8 +5,7 @@ let addressSchema;
 export default addressSchema = new mongoose.Schema({
 	name: String,
 	companyName: String,
-	street: String,
-	streetNumber: Number,
+	streetAddress: String,
 	postalCode: String,
 	city: String,
 	country: String,

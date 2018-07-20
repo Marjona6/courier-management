@@ -1,0 +1,16 @@
+/* button types! */
+.assign {
+	background-color: red;
+}
+
+.add-discount {
+	background-color: green;
+}
+
+.pickup {
+	background-color: blue;
+}
+
+.deliver {
+	background-color: pink;
+}

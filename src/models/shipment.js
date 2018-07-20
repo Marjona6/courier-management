@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 import addressSchema from './address';
 import costSchema from './cost';
 
+
 const shipmentSchema = new mongoose.Schema({
 	origin: addressSchema,
 	destination: addressSchema,

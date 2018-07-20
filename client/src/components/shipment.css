@@ -2,10 +2,18 @@
 	background-color: #F8FFFE;
 }
 
-.shipment.to-be-picked-up {
+.shipment.WAITING {
 	background-color: red;
 }
 
-.shipment.to-be-delivered {
-	background-color: purple;
+.shipment.ASSIGNED {
+	background-color: orange;
+}
+
+.shipment.PICKED_UP {
+	background-color: yellow;
+}
+
+.shipment.DELIVERED {
+	background-color: green;
 }

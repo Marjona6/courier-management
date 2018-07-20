@@ -4,6 +4,7 @@ const app = express();
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const port = process.env.PORT || 4877;
 
 const config = require('config');
@@ -16,6 +17,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.text());
 app.use(bodyParser.json({type: 'application/json'}));
+app.use(cors({
+	origin: (origin, cb) => {
+		if (!origin) {
+			return cb(new Error('Empty origin is not allowed!'));
+		}
+		const isDevEnv = origin == 'http://localhost:3000';
+		if (isDevEnv) {
+			cb(null, true);
+		} else {
+			cb(new Error(`Origin ${origin} is not allowed access!`));
+		}
+	},
+	'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+	'preflightContinue': false
+}));
 
 require('./routes')(app);
 

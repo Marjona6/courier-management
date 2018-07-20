@@ -8,7 +8,7 @@ export default class List extends Component {
     return (
       <div className="list">
       	<table>
-      		<caption>A list of shipments.</caption>
+      		<caption>{this.props.caption}</caption>
       		<thead>
       			<tr>
       				{this.props.headings.map(heading => {
@@ -18,10 +18,8 @@ export default class List extends Component {
       		</thead>
       		<tbody>
       			{this.props.shipments.map(shipment => {
-      				return <Shipment key={shipment.id} orderStatus={shipment.orderStatus}/>
+      				return <Shipment key={shipment._id} orderStatus={shipment.status}/>
       			})}
-      			<Shipment orderStatus='to-be-picked-up'/>
-      			<Shipment orderStatus='to-be-delivered'/>
       		</tbody>
       	</table>
       </div>
