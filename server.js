@@ -33,6 +33,39 @@ app.use(cors({
 	'preflightContinue': false
 }));
 
+app.use(cookieParser());
+
+app.use(session({
+	key: 'saloodo_user_id',
+	secret: 'shipment77',
+	resave: false,
+	saveUninitialized: false,
+	cookie: {
+		expires: 600000
+	}
+}));
+
+app.use((req, res, next) => {
+	if (req.cookies.saloodo_user_id && !req.session.user) {
+		res.clearCookie('saloodo_user_id');
+	}
+	next();
+});
+
+const sessionChecker = (req, res, next) => {
+	if (req.session.user && req.cookies.saloodo_user_id) {
+		// for now, only couriers will log in?
+		// if courier...
+		res.redirect('/todo'); // is this going to work?
+		// if manager...
+		// res.redirect('/dashboard');
+	} else {
+		// managers should be redirected to dashboard
+		// res.redirect('/dashboard');
+		next();
+	}
+}
+
 require('./routes')(app);
 
 if (config.util.getEnv('NODE_ENV') === 'test') {

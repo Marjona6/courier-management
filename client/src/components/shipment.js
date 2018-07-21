@@ -11,7 +11,9 @@ export default class Shipment extends Component {
   				<td>1972</td>
   				<td>2003</td>
   				<td>1865</td>
-  				<Button buttonText="Click Me" buttonType="deliver"/> 
+  				<td>2015</td>
+  				<td><Button text="Pick Up" type="pickup" handler={this.props.pickupShipment}/></td>
+  				<td><Button text="Deliver" type="deliver" handler={this.props.deliverShipment}/></td>
       		</tr>
 		)
 	}
