@@ -4,3 +4,13 @@
   color: #349AED;
   font-family: Lato;
 }
+
+.user-selector {
+	color: white;
+	text-decoration: none;
+	font-size: 1.5em;
+	margin: 3em;
+	border: 2px solid blue;
+	padding: 10px;
+	background-color: navy;
+}

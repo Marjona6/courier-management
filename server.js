@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 
 const mongoose = require('mongoose');
+const session = require('express-session');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const port = process.env.PORT || 4877;
 
@@ -61,7 +63,7 @@ const sessionChecker = (req, res, next) => {
 		// res.redirect('/dashboard');
 	} else {
 		// managers should be redirected to dashboard
-		// res.redirect('/dashboard');
+		res.redirect('/login'); // ???
 		next();
 	}
 }
