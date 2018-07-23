@@ -6,7 +6,7 @@ import './dashboard.css';
 import Header from './header';
 import List from './list';
 
-export default class Dashboard extends Component {
+export default class Todo extends Component {
 
 	constructor(props) {
 		super(props);
@@ -14,6 +14,7 @@ export default class Dashboard extends Component {
 		this.state = {
 			shipments: [],
 			isLoading: true,
+			shipmentsListIsEmpty: false,
 		}
 	}
 
@@ -26,10 +27,16 @@ export default class Dashboard extends Component {
 		    .then(response => {
 		      console.log('response:', response);
 		      this.setState({
-		        shipments: response.data
+		        shipments: response.data,
+		        isLoading: false
 		      }, () => {
 		        console.log(this.state.shipment);
 		      });
+		      if (response.data.length === 0) {
+		      	this.setState({
+		      		shipmentsListIsEmpty: true,
+		      	});
+		      }
 		    })
 		    .catch(error => {
 		      console.error(error);
@@ -48,6 +55,7 @@ export default class Dashboard extends Component {
 	              	<Header {...props} text="Courier To-Do Web Tool"/>
 	              	<List {...props} headings={this.props.headings} caption={'My Shipments'} shipments={this.state.shipments}/>
 	            	{this.state.isLoading && <p>Loading...</p>}
+	            	{this.state.shipmentsListIsEmpty && <p>No shipments found!</p>}
 	            </div>
 	        )}/>
 		)
