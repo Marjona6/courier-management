@@ -58,7 +58,7 @@ export default class Shipment extends Component {
           <td>{this.props.shipment.destination.streetAddress}</td>
           <td>{this.props.shipment.status}</td>
           <td>{(this.props.shipment.cost.currentPrice / 100).toFixed(2)}</td>
-          <td>{this.props.shipment.courier ? this.props.shipment.courier.name : ''}</td>
+          {this.props.isDashboard && <td>{this.props.shipment.courier ? this.props.shipment.courier.name : ''}</td>}
           {this.props.buttons.map(button => {
             return (<td key={button.type}><Button text={button.text} type={button.type} onClick={this.toggleModal}/>
               <Modal
@@ -74,7 +74,7 @@ export default class Shipment extends Component {
                 <button onClick={this.handleModalCloseRequest}>Cancel</button>
                 <div>{button.description}</div>
                 <form>
-                  {this.props.couriers.map(courier => {
+                  {this.props.couriers && this.props.couriers.map(courier => {
                     return (<p key={courier._id}>Name: {courier.name} ID: {courier._id} Current number of shipments: {courier.shipments.length}
                       <button type="button" onClick={button.handler}>{button.text}</button></p>
                     )

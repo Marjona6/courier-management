@@ -18,11 +18,15 @@ export default class Todo extends Component {
 			buttons: [
 				{
 					text: 'Pick Up',
-					type: 'pickup'
+					type: 'pickup',
+					description: '',
+					handler: this.pickupShipment,
 				},
 				{
 					text: 'Deliver',
-					type: 'deliver'
+					type: 'deliver',
+					description: '',
+					handler: this.deliverShipment,
 				}
 			],
 		}
@@ -63,7 +67,14 @@ export default class Todo extends Component {
 			<Route path='/todo' render={ (props) => (
 	            <div>
 	              	<Header {...props} text="Courier To-Do Web Tool"/>
-	              	<List {...props} headings={this.props.headings} caption={'My Shipments'} shipments={this.state.shipments}/>
+	              	<List {...props}
+	              		headings={this.props.headings}
+	              		isDashboard={false}
+	              		currentModal={this.state.currenModal}
+	              		caption={'My Shipments'}
+	              		shipments={this.state.shipments}
+	              		buttons={this.state.buttons}
+	              	/>
 	            	{this.state.isLoading && <p>Loading...</p>}
 	            	{this.state.shipmentsListIsEmpty && <p>No shipments found!</p>}
 	            </div>

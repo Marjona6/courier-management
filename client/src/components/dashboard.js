@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { observable, observer } from 'mobx';
 import axios from 'axios';
 import './dashboard.css';
 
 import Header from './header';
 import List from './list';
 
-@observer
 export default class Dashboard extends Component {
 
 	constructor(props) {
@@ -17,8 +15,8 @@ export default class Dashboard extends Component {
 		this.assignShipment = this.assignShipment.bind(this);
 
 		this.state = {
-			@observable shipments: [],
-			@observable isLoading: true,
+			shipments: [],
+			isLoading: true,
 			couriers: [],
 			currentModal: null,
 			buttons: [
@@ -106,7 +104,15 @@ export default class Dashboard extends Component {
 			<Route path='/dashboard' render={ (props) => (
 	            <div>
 	              	<Header {...props} text="Management Dashboard"/>
-	              	<List {...props} headings={this.props.headings} currentModal={this.state.currentModal} caption={'All Shipments'} prepareToAssignShipment={this.prepareToAssignShipment} couriers={this.state.couriers} shipments={this.state.shipments} buttons={this.state.buttons}/>
+	              	<List {...props}
+	              		headings={this.props.headings}
+	              		isDashboard={true}
+	              		currentModal={this.state.currentModal}
+	              		caption={'All Shipments'}
+	              		prepareToAssignShipment={this.prepareToAssignShipment}
+	              		couriers={this.state.couriers} shipments={this.state.shipments}
+	              		buttons={this.state.buttons}
+	              	/>
 	            	{this.state.isLoading && <p>Loading...</p>}
 	            </div>
 	        )}/>
