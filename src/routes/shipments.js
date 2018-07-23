@@ -16,6 +16,24 @@ module.exports = app => {
 			res.status(200).json(shipmentDocs);
 		})
 
+		// assign a shipment to a courier
+		.put('/shipment/courier/assign/:id', async (req, res) => {
+			let courier = req.body.courier; // make sure front end sends it this way
+			ShipmentModel
+				.findByIdAndUpdate(req.params.id, {$set: {courier: courier}})
+				.then( () => {
+					return res.status(200).json({
+						message: `Shipment with ID ${req.params.id} has been assigned to courier ${req.body.courier}.`
+					});
+				})
+				.catch(err => {
+					console.error(err);
+					res.status(500).json({
+						message: 'Internal server error'
+					});
+				});
+		})
+
 		// add a discount to a shipment (amount)
 		.put('/shipment/:id/discount/amount', async (req, res) => {
 			let updateAmount = req.body.amount; // make sure front end sends it this way
@@ -135,6 +153,7 @@ module.exports = app => {
 				phone: faker.phone.phoneNumber()
 			}
 			let shipment = {
+				courier: mongoose.Types.ObjectId('5b51abb66423f83a82678516'),
 				origin: origin,
 				destination: destination,
 				status: 'WAITING',

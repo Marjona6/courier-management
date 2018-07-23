@@ -1,10 +1,34 @@
 import React, { Component } from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
+import { observable, observer } from 'mobx';
 import './App.css';
 
 import Header from './components/header';
 import Dashboard from './components/dashboard';
 import Todo from './components/todo';
+
+const appState = observable({
+  courierHeadings: ['ID', 'Origin', 'Destination', 'Order Status', 'Delivery Cost', 'Pick Up', 'Deliver'],
+  managerHeadings: ['ID', 'Origin', 'Destination', 'Order Status', 'Delivery Cost', 'Assignee', 'Assign', 'Add Discount'],
+  shipments: [],
+  isLoading: true,
+  couriers: [],
+  currentModal: null,
+  buttons: [
+    {
+      text: 'Assign',
+      type: 'assign',
+      description: 'Choose a courier to assign this shipment to.',
+      handler: this.assignShipment,
+    },
+    {
+      text: 'Discount',
+      type: 'discount',
+      description: 'Choose a type and amount of discount to apply to this shipment.',
+      handler: this.discountShipment,
+    }
+  ],
+});
 
 export default class App extends Component {
   constructor(props) {

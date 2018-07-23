@@ -18,7 +18,7 @@ export default class List extends Component {
       		</thead>
       		<tbody>
       			{this.props.shipments.map(shipment => {
-      				return <Shipment key={shipment._id} orderStatus={shipment.status}/>
+      				return <Shipment key={shipment._id} shipment={shipment} couriers={this.props.couriers} orderStatus={shipment.status} prepareToAssignShipment={this.props.prepareToAssignShipment} buttons={this.props.buttons}/>
       			})}
       		</tbody>
       	</table>

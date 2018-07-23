@@ -15,6 +15,16 @@ export default class Todo extends Component {
 			shipments: [],
 			isLoading: true,
 			shipmentsListIsEmpty: false,
+			buttons: [
+				{
+					text: 'Pick Up',
+					type: 'pickup'
+				},
+				{
+					text: 'Deliver',
+					type: 'deliver'
+				}
+			],
 		}
 	}
 
