@@ -59,13 +59,19 @@ export default class Dashboard extends Component {
 
 	}
 
-	assignShipment(event) {
-		event.preventDefault();
-		console.log('assigning shipment');
+	assignShipment(event, id, courier) {
+		// event.preventDefault();
 		// axios.request({
-		// 	method: 'PUT',
-		// 	url: 'http://localhost:4877/shipment/courier/assign/' + 
-		// })
+	 //      method: 'PUT',
+	 //      url: 'http://localhost:4877/shipment/courier/assign/' + id,
+	 //      data: {timestamp: new Date(), courier: courier},
+	 //    })
+	 //    .then(response => {
+	 //      this.updateShipmentForDisplay(id);
+	 //    })
+	 //    .catch(error => {
+	 //      console.error(error);
+	 //    });
 		
 	}
 

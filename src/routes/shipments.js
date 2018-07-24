@@ -1,4 +1,5 @@
 import ShipmentModel from '../models/shipment';
+import CourierModel from '../models/courier';
 import addressSchema from '../models/address';
 import costSchema from '../models/cost';
 
@@ -20,7 +21,14 @@ module.exports = app => {
 		.put('/shipment/courier/assign/:id', async (req, res) => {
 			let courier = req.body.courier; // make sure front end sends it this way
 			ShipmentModel
-				.findByIdAndUpdate(req.params.id, {$set: {courier: courier}})
+				.findByIdAndUpdate(req.params.id, {$set: {courier: courier, status: 'ASSIGNED', assignedTimestamp: req.body.timestamp}})
+				.then( async () => {
+					let courierDoc = await CourierModel.findById(req.body.courier);
+					let shipmentList = courierDoc.shipments;
+					shipmentList.push(req.params.id);
+					courierDoc.set({shipments: shipmentList});
+					courierDoc.save();
+				})
 				.then( () => {
 					return res.status(200).json({
 						message: `Shipment with ID ${req.params.id} has been assigned to courier ${req.body.courier}.`

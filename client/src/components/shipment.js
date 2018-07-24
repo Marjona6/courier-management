@@ -13,6 +13,8 @@ export default class Shipment extends Component {
     this.toggleModal = this.toggleModal.bind(this);
     this.handleModalCloseRequest = this.handleModalCloseRequest.bind(this);
     this.updateShipmentForDisplay = this.updateShipmentForDisplay.bind(this);
+    this.assignShipment = this.assignShipment.bind(this);
+    this.discountShipment = this.discountShipment.bind(this);
     this.pickUpShipment = this.pickUpShipment.bind(this);
     this.deliverShipment = this.deliverShipment.bind(this);
 
@@ -39,6 +41,27 @@ export default class Shipment extends Component {
     .catch(error => {
       console.error(error);
     });
+  }
+
+  assignShipment(event, id, courier) {
+    console.log(id, courier);
+    // need to get courier id--manager selects from a list of all couriers
+    axios.request({
+      method: 'PUT',
+      url: 'http://localhost:4877/shipment/courier/assign/' + id,
+      data: {timestamp: new Date(), courier: courier},
+    })
+    .then(response => {
+      this.updateShipmentForDisplay(id);
+      this.toggleModal(event, 'assign');
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+
+  discountShipment(id) {
+    // todo
   }
 
   pickUpShipment(id) {
@@ -98,7 +121,7 @@ export default class Shipment extends Component {
   toggleModal(event, val) {
     event.preventDefault();
     if (this.props.isDashboard) {
-      this.props.prepareToAssignShipment();
+      this.props.prepareToAssignShipment(); // not needed for discount
     }
     if (this.state.currentModal) {
       this.handleModalCloseRequest();
@@ -152,9 +175,10 @@ export default class Shipment extends Component {
                 <div>{button.description}</div>
                 <form>
                   {this.props.couriers && this.props.couriers.map(courier => {
-                    return (<p key={courier._id}>Name: {courier.name} ID: {courier._id} Current number of shipments: {courier.shipments.length}
-                      <button type="button" onClick={button.handler}>{button.text}</button></p>
-                    )
+                    return (<div><p key={courier._id}>Name: {courier.name} ID: {courier._id} Current number of shipments: {courier.shipments.length}
+                      {button.type === "assign" && <button type="button" onClick={e => {this.assignShipment(e, this.state.shipment._id, courier._id)}}>{button.text}</button>}
+                      {button.type === "discount" && <button type="button" onClick={e => {this.discountShipment(e, this.state.shipment._id, courier._id)}}>{button.text}</button>}
+                    </p></div>)
                   })}
                 </form>
               </Modal>
