@@ -71,14 +71,19 @@ module.exports = app => {
 			res.status(200).json(courierShipmentDocs);
 		})
 
+		.get('/shipment/:id', async (req, res) => {
+			const shipmentDoc = await ShipmentModel.findById(req.params.id);
+			res.status(200).json(shipmentDoc);
+		})
+
 		// register a shipment as picked up
 		.put('/shipment/:id/pickedup', async (req, res) => {
-			let updateObject = req.body;
 			ShipmentModel
-				.findByIdAndUpdate(req.params.id, {$set: updateObject})
+				.findByIdAndUpdate(req.params.id, {$set: {status: 'PICKED_UP', pickedUpTimestamp: req.body.timestamp}})
 				.then( () => {
+					console.log(req.body);
 					return res.status(200).json({
-						message: `Shipment with ID ${req.params.id} has been picked up!`,
+						message: `Shipment with ID ${req.params.id} has been picked up at ${req.body.timestamp}!`,
 					});
 				})
 				.catch( (err) => {
@@ -91,9 +96,8 @@ module.exports = app => {
 
 		// register a shipment as delivered
 		.put('/shipment/:id/delivered', async (req, res) => {
-			let updateObject = req.body;
 			ShipmentModel
-				.findByIdAndUpdate(req.params.id, {$set: updateObject})
+				.findByIdAndUpdate(req.params.id, {$set: {status: 'DELIVERED', deliveredTimestamp: req.body.timestamp}})
 				.then( () => {
 					return res.status(200).json({
 						message: `Shipment with ID ${req.params.id} has been delivered!`,

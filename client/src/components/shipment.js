@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import './shipment.css';
 
 import Button from './button';
@@ -11,23 +12,94 @@ export default class Shipment extends Component {
     this.onClick = this.onClick.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.handleModalCloseRequest = this.handleModalCloseRequest.bind(this);
+    this.updateShipmentForDisplay = this.updateShipmentForDisplay.bind(this);
+    this.pickUpShipment = this.pickUpShipment.bind(this);
+    this.deliverShipment = this.deliverShipment.bind(this);
 
     this.state = {
       currentModal: null,
+      isPickedUp: false,
+      isDelivered: false,
+      shipment: this.props.shipment,
     }
   }
 
-  
-
-  onClick(event) {
-    event.preventDefault();
-    console.log(this);
+  updateShipmentForDisplay(id) {
+    console.log('updating shipment for display');
+    axios.request({
+      method: 'GET',
+      url: 'http://localhost:4877/shipment/' + id,
+    })
+    .then(response => {
+      console.log(response);
+      this.setState({
+        shipment: response.data,
+      })
+    })
+    .catch(error => {
+      console.error(error);
+    });
   }
 
-  toggleModal(val, event) {
+  pickUpShipment(id) {
+    // register pickup timestamp and order status change
+    axios.request({
+      method: 'PUT',
+      url: 'http://localhost:4877/shipment/' + id + '/pickedup',
+      data: {timestamp: new Date()},
+    })
+    .then(response => {
+      this.updateShipmentForDisplay(id);
+      this.setState({
+        isPickedUp: true,
+      });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+
+  deliverShipment(id) {
+    // register delivery timestamp and order status change
+    axios.request({
+      method: 'PUT',
+      url: 'http://localhost:4877/shipment/' + id + '/delivered',
+      data: {timestamp: new Date()},
+    })
+    .then(response => {
+      this.updateShipmentForDisplay(id);
+      this.setState({
+        isDelivered: true,
+      });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
+  }
+
+  onClick(event, val, id) {
     event.preventDefault();
-    this.props.prepareToAssignShipment();
-    console.log('toggling', this.state.currentmodal, event.target, val);
+    // for manager dashboard
+    if (this.props.isDashboard) {
+      this.toggleModal(event, val);
+    }
+    else {
+      // for courier to-do tool
+      if (event.target.className === 'pickup') {
+        this.pickUpShipment(id);
+      }
+      else if (event.target.className === 'deliver') {
+        this.deliverShipment(id);
+      }
+    }
+  }
+
+  toggleModal(event, val) {
+    event.preventDefault();
+    if (this.props.isDashboard) {
+      this.props.prepareToAssignShipment();
+    }
     if (this.state.currentModal) {
       this.handleModalCloseRequest();
       return;
@@ -38,8 +110,6 @@ export default class Shipment extends Component {
     }, () => {
       console.log('state is now:', this.state, val);
     });
-    // this.handleModalCloseRequest();
-    // return;
   }
     
   handleModalCloseRequest(event) {
@@ -52,15 +122,22 @@ export default class Shipment extends Component {
 
 	render() {
 		return (
-			<tr className={`shipment ${this.props.orderStatus}`}>
-          <td>{this.props.shipment._id}</td>
-          <td>{this.props.shipment.origin.streetAddress}</td>
-          <td>{this.props.shipment.destination.streetAddress}</td>
-          <td>{this.props.shipment.status}</td>
-          <td>{(this.props.shipment.cost.currentPrice / 100).toFixed(2)}</td>
-          {this.props.isDashboard && <td>{this.props.shipment.courier ? this.props.shipment.courier.name : ''}</td>}
+			<tr className={`shipment ${this.state.shipment.status}`}>
+          <td>{this.state.shipment._id}</td>
+          <td>{this.state.shipment.origin.streetAddress}</td>
+          <td>{this.state.shipment.destination.streetAddress}</td>
+          <td>{this.state.shipment.status}</td>
+          <td>{(this.state.shipment.cost.currentPrice / 100).toFixed(2)}</td>
+          {this.props.isDashboard && <td>{this.state.shipment.courier ? this.state.shipment.courier.name : ''}</td>}
           {this.props.buttons.map(button => {
-            return (<td key={button.type}><Button text={button.text} type={button.type} onClick={this.toggleModal}/>
+            return ((button.type === 'pickup') && (this.state.shipment.pickedUpTimestamp)) && <td key={button.type}>{this.state.shipment.pickedUpTimestamp.toString()}</td>
+          })}
+          {this.props.buttons.map(button => {
+            return ((button.type === 'deliver') && (this.state.shipment.deliveredTimestamp)) && <td key={button.type}>{this.state.shipment.deliveredTimestamp.toString()}</td>
+          })}
+          {this.props.buttons.map(button => {
+            return (
+            (((button.type === 'pickup') && !this.state.shipment.pickedUpTimestamp) || ((button.type === 'deliver') && !this.state.shipment.deliveredTimestamp) || (this.props.isDashboard)) && <td key={button.type}><Button text={button.text} type={button.type} shipmentId={this.state.shipment._id} onClick={this.onClick}/>
               <Modal
                 id="test"
                 title={button.text}
