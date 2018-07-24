@@ -151,16 +151,20 @@ export default class Shipment extends Component {
           <td>{this.state.shipment.destination.streetAddress}</td>
           <td>{this.state.shipment.status}</td>
           <td>{(this.state.shipment.cost.currentPrice / 100).toFixed(2)}</td>
-          {this.props.isDashboard && <td>{this.state.shipment.courier ? this.state.shipment.courier.name : ''}</td>}
+          {this.props.isDashboard && <td>{this.state.shipment.courier ? this.state.shipment.courier : ''}</td>}
           {this.props.buttons.map(button => {
-            return ((button.type === 'pickup') && (this.state.shipment.pickedUpTimestamp)) && <td key={button.type}>{this.state.shipment.pickedUpTimestamp.toString()}</td>
+            return ((button.type === 'pickup') && (this.state.shipment.pickedUpTimestamp)) && <td key={button.type}>{this.state.shipment.pickedUpTimestamp ? this.state.shipment.pickedUpTimestamp.toString() : ''}</td>
           })}
           {this.props.buttons.map(button => {
-            return ((button.type === 'deliver') && (this.state.shipment.deliveredTimestamp)) && <td key={button.type}>{this.state.shipment.deliveredTimestamp.toString()}</td>
+            return ((button.type === 'deliver') && (this.state.shipment.deliveredTimestamp)) && <td key={button.type}>{this.state.shipment.deliveredTimestamp ? this.state.shipment.deliveredTimestamp.toString() : ''}</td>
+          })}
+          {this.props.buttons.map(button => {
+            return ((button.type === 'assign') && (this.state.shipment.assignedTimestamp)) && <td key={button.type}>{this.state.shipment.assignedTimestamp ? this.state.shipment.assignedTimestamp.toString() : ''}</td>
           })}
           {this.props.buttons.map(button => {
             return (
-            (((button.type === 'pickup') && !this.state.shipment.pickedUpTimestamp) || ((button.type === 'deliver') && !this.state.shipment.deliveredTimestamp) || (this.props.isDashboard)) && <td key={button.type}><Button text={button.text} type={button.type} shipmentId={this.state.shipment._id} onClick={this.onClick}/>
+            (((button.type === 'pickup') && !this.state.shipment.pickedUpTimestamp) || ((button.type === 'deliver') && !this.state.shipment.deliveredTimestamp) || ((button.type === 'assign') && (this.state.shipment.status === 'WAITING')) || ((button.type === 'discount') && (this.state.shipment.status !== 'DELIVERED')) )
+                && <td key={button.type}><Button text={button.text} type={button.type} shipmentId={this.state.shipment._id} onClick={this.onClick}/>
               <Modal
                 id="test"
                 title={button.text}

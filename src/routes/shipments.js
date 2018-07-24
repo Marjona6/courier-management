@@ -165,7 +165,7 @@ module.exports = app => {
 				phone: faker.phone.phoneNumber()
 			}
 			let shipment = {
-				courier: mongoose.Types.ObjectId('5b51abb66423f83a82678516'),
+				// courier: mongoose.Types.ObjectId('5b51abb66423f83a82678516'),
 				origin: origin,
 				destination: destination,
 				status: 'WAITING',
@@ -185,5 +185,18 @@ module.exports = app => {
 			});
 		})
 
+		// delete a shipment for dev/testing purposes only for now
+		.delete('/shipment/delete/:id', (req, res) => {
+			ShipmentModel
+				.findByIdAndDelete(req.params.id)
+				.then( () => {
+					res.status(200).json({
+						message: 'Shipment deleted.',
+					});
+				})
+				.catch(error => {
+					console.error(error);
+				});
+		})
 		;
 }
