@@ -66,6 +66,9 @@ export default class Shipment extends Component {
 
   discountShipment(event, id) {
     console.log('discounting...', this.state.discountType);
+    if (!this.state.amountDiscount && !this.state.percentageDiscount) {
+      alert('Please enter either a percentage or an amount for the discount.');
+    }
     if (!this.state.discountType) {
       alert('Please select a discount type!');
     }

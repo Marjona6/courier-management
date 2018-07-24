@@ -46,8 +46,10 @@ module.exports = app => {
 		.put('/shipment/:id/discount/amount', async (req, res) => {
 			let updateAmount = req.body.discountAmount * 100; // make sure front end sends it this way
 			let shipmentDoc = await ShipmentModel.findById(req.params.id);
-			console.log(shipmentDoc.cost.currentPrice);
 			let newPrice = shipmentDoc.cost.currentPrice - updateAmount;
+			if (newPrice < 0) {
+				newPrice = 0;
+			}
 			shipmentDoc.cost.set({currentPrice: newPrice});
 			shipmentDoc.save();
 			return res.status(200).json({
@@ -57,7 +59,14 @@ module.exports = app => {
 
 		// add a discount to a shipment (percentage)
 		.put('/shipment/:id/discount/percentage', async (req, res) => {
-			// to do
+			let updatePercentage = req.body.discountPercentage;
+			let shipmentDoc = await ShipmentModel.findById(req.params.id);
+			let newPrice = shipmentDoc.cost.currentPrice - (shipmentDoc.cost.currentPrice * updatePercentage / 100);
+			shipmentDoc.cost.set({currentPrice: newPrice});
+			shipmentDoc.save();
+			return res.status(200).json({
+				message: `Shipment with ID ${req.params.id} has been discounted by ${updatePercentage}%!`,
+			});
 		})
 
 	// COURIER tasks
