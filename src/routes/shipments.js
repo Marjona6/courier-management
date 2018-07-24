@@ -44,27 +44,15 @@ module.exports = app => {
 
 		// add a discount to a shipment (amount)
 		.put('/shipment/:id/discount/amount', async (req, res) => {
-			let updateAmount = req.body.amount; // make sure front end sends it this way
-			ShipmentModel.findById(req.params.id, 'cost.originalPrice cost.currentPrice')
-				.exec( (err, shipment) => {
-					if (!shipment.cost.currentPrice) {
-						// need to figure out whether discounts will be applied to current price or original price
-					}
-				})
-			ShipmentModel
-				.findByIdAndUpdate(req.params.id, {$set: updateObject})
-				.then( () => {
-					return res.status(200).json({
-						message: `Shipment with ID ${req.params.id} has been picked up!`,
-					});
-				})
-				.catch( (err) => {
-					console.error(err);
-					res.status(500).json({
-						message: 'Internal server error',
-					});
-				});
-			// to do
+			let updateAmount = req.body.discountAmount * 100; // make sure front end sends it this way
+			let shipmentDoc = await ShipmentModel.findById(req.params.id);
+			console.log(shipmentDoc.cost.currentPrice);
+			let newPrice = shipmentDoc.cost.currentPrice - updateAmount;
+			shipmentDoc.cost.set({currentPrice: newPrice});
+			shipmentDoc.save();
+			return res.status(200).json({
+				message: `Shipment with ID ${req.params.id} has been discounted by ${updateAmount}!`,
+			});
 		})
 
 		// add a discount to a shipment (percentage)
@@ -103,6 +91,8 @@ module.exports = app => {
 		})
 
 		// register a shipment as delivered
+		// TODO: remove the shipment from the courier's queue?
+		// need an extra data structure to hold delivered shipments that should still be linked to courier but not in active queue
 		.put('/shipment/:id/delivered', async (req, res) => {
 			ShipmentModel
 				.findByIdAndUpdate(req.params.id, {$set: {status: 'DELIVERED', deliveredTimestamp: req.body.timestamp}})

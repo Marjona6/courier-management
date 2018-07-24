@@ -17,12 +17,16 @@ export default class Shipment extends Component {
     this.discountShipment = this.discountShipment.bind(this);
     this.pickUpShipment = this.pickUpShipment.bind(this);
     this.deliverShipment = this.deliverShipment.bind(this);
+    this.selectDiscountType = this.selectDiscountType.bind(this);
+    this.handlePercentageDiscount = this.handlePercentageDiscount.bind(this);
+    this.handleAmountDiscount = this.handleAmountDiscount.bind(this);
 
     this.state = {
       currentModal: null,
-      isPickedUp: false,
-      isDelivered: false,
+      // isPickedUp: false,
+      // isDelivered: false,
       shipment: this.props.shipment,
+
     }
   }
 
@@ -60,8 +64,39 @@ export default class Shipment extends Component {
     });
   }
 
-  discountShipment(id) {
-    // todo
+  discountShipment(event, id) {
+    console.log('discounting...', this.state.discountType);
+    if (!this.state.discountType) {
+      alert('Please select a discount type!');
+    }
+    else if (this.state.discountType === 'percentage') {
+      axios.request({
+        method: 'PUT',
+        url: 'http://localhost:4877/shipment/' + id + '/discount/percentage',
+        data: { discountPercentage: this.state.percentageDiscount },
+      })
+      .then(response => {
+        this.updateShipmentForDisplay(id);
+        this.toggleModal(event, 'discount');
+      })
+      .catch(error => {
+        console.error(error);
+      })
+    }
+    else if (this.state.discountType === 'amount') {
+      axios.request({
+        method: 'PUT',
+        url: 'http://localhost:4877/shipment/' + id + '/discount/amount',
+        data: { discountAmount: this.state.amountDiscount },
+      })
+      .then(response => {
+        this.updateShipmentForDisplay(id);
+        this.toggleModal(event, 'discount');
+      })
+      .catch(error => {
+        console.error(error);
+      })
+    }
   }
 
   pickUpShipment(id) {
@@ -143,6 +178,24 @@ export default class Shipment extends Component {
     });
   }
 
+  selectDiscountType(event) {
+    this.setState({
+      discountType: event.target.value,
+    });
+  }
+
+  handlePercentageDiscount(event) {
+    this.setState({
+      percentageDiscount: event.target.value,
+    });
+  }
+
+  handleAmountDiscount(event) {
+    this.setState({
+      amountDiscount: event.target.value,
+    });
+  }
+
 	render() {
 		return (
 			<tr className={`shipment ${this.state.shipment.status}`}>
@@ -163,7 +216,10 @@ export default class Shipment extends Component {
           })}
           {this.props.buttons.map(button => {
             return (
-            (((button.type === 'pickup') && !this.state.shipment.pickedUpTimestamp) || ((button.type === 'deliver') && !this.state.shipment.deliveredTimestamp) || ((button.type === 'assign') && (this.state.shipment.status === 'WAITING')) || ((button.type === 'discount') && (this.state.shipment.status !== 'DELIVERED')) )
+            (((button.type === 'pickup') && !this.state.shipment.pickedUpTimestamp) ||
+              ((button.type === 'deliver') && !this.state.shipment.deliveredTimestamp) ||
+              ((button.type === 'assign') && (this.state.shipment.status === 'WAITING')) ||
+              ((button.type === 'discount') && (this.state.shipment.status !== 'DELIVERED')))
                 && <td key={button.type}><Button text={button.text} type={button.type} shipmentId={this.state.shipment._id} onClick={this.onClick}/>
               <Modal
                 id="test"
@@ -179,10 +235,20 @@ export default class Shipment extends Component {
                 <div>{button.description}</div>
                 <form>
                   {this.props.couriers && this.props.couriers.map(courier => {
-                    return (<div><p key={courier._id}>Name: {courier.name} ID: {courier._id} Current number of shipments: {courier.shipments.length}
-                      {button.type === "assign" && <button type="button" onClick={e => {this.assignShipment(e, this.state.shipment._id, courier._id)}}>{button.text}</button>}
-                      {button.type === "discount" && <button type="button" onClick={e => {this.discountShipment(e, this.state.shipment._id, courier._id)}}>{button.text}</button>}
-                    </p></div>)
+                    return (
+                      <div key={button.text}>
+                        {button.type === "assign" && <p key={courier._id}>Name: {courier.name} ID: {courier._id} Current number of shipments: {courier.shipments.length}</p>}
+                        {button.type === "discount" && (
+                          <div>
+                            <legend>Discount Type</legend>
+                            <input type="radio" value="percentage" checked={this.state.discountType === 'percentage'} onChange={this.selectDiscountType}/><label>Percentage</label><input onChange={e => this.handlePercentageDiscount(e)} type="number"/>
+                            <input type="radio" value="amount" checked={this.state.discountType === 'amount'} onChange={this.selectDiscountType}/><label>Amount</label><input onChange={e => this.handleAmountDiscount(e)} type="number"/>
+                          </div>
+                          )
+                        }
+                        {button.type === "assign" && <button type="button" onClick={e => {this.assignShipment(e, this.state.shipment._id, courier._id)}}>{button.text}</button>}
+                        {button.type === "discount" && <button type="button" onClick={e => {this.discountShipment(e, this.state.shipment._id)}}>{button.text}</button>}
+                      </div>)
                   })}
                 </form>
               </Modal>
