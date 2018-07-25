@@ -17,6 +17,14 @@
   "author": "Meryem Yanar",
   "license": "ISC",
   "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.3",
+    "npm-run-all": "^4.1.3"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
     "babel-core": "^6.26.3",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -24,21 +32,13 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.26.0",
-    "chai": "^4.1.2",
-    "chai-http": "^4.0.0",
-    "faker": "^4.1.0",
-    "mocha": "^5.2.0",
-    "nodemon": "^1.18.3",
-    "npm-run-all": "^4.1.3"
-  },
-  "dependencies": {
-    "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "config": "^1.30.0",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "express-validator": "^5.2.0",
+    "faker": "^4.1.0",
     "mongodb": "^3.1.1",
     "mongoose": "^5.2.4",
     "mongoose-currency": "^0.2.0",

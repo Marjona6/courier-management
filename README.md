@@ -26,6 +26,8 @@ Shipment management system prototype for Saloodo.
 
 ## API
 
+Endpoints for shipments, couriers, bundles.
+
 ## Bundles: Proposed Front-End Treatment
 
 Currently, shipments are displayed individually. Bundles can be displayed as grouped shipments, visually identified as a bundle by spacing and borders to set the group apart from other groups and individual shipments.
