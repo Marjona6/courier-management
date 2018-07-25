@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Shipment management system prototype for Saloodo.",
   "engines": {
-    "node": "10.6.0"
+    "node": "10.6.0",
+    "npm": "6.2.0"
   },
   "main": "server.js",
   "scripts": {
