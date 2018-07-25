@@ -102,6 +102,8 @@ module.exports = app => {
 
 		// register a shipment as delivered
 		// TODO: remove the shipment from the courier's queue?
+		// front end should not allow courier to register a shipment as delivered if it has not already been registered as picked up
+		// alternatively, back end can validate for a pickedUpTimestamp and if there is none, do not allow for registering as delivered
 		// need an extra data structure to hold delivered shipments that should still be linked to courier but not in active queue
 		.put('/shipment/:id/delivered', async (req, res) => {
 			ShipmentModel
