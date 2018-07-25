@@ -30,20 +30,19 @@ module.exports = app => {
 		// another todo: add a 'bundleCreatedTimestamp' and add to model and also add here
 		.post('/bundle/create', async (req, res) => {
 			// a bundle is composed of shipments; pass in an array of shipments IDs
-			let shipments = req.body.shipments; // passed in as an array
 			// create the bundle document itself
 			let newBundle = new BundleModel({
 				// may need to make sure each shipment ID is in the form of a mongoose.Types.ObjectId?
-				shipments: shipments, // the shipments can be accessed via their refs using populate method
+				shipments: req.body.shipments, // the shipments can be accessed via their refs
 			});
 			// update each shipment with the bundle ID
-			shipments.map(async shipment => {
+			req.body.shipments.map(async shipment => {
 				let shipmentDoc = await ShipmentModel.findByIdAndUpdate(shipment, {$set: {bundle: mongoose.Types.ObjectId(newBundle._id)}});
 			});
+			newBundle.save();
 			res.status(200).json({
 				message: 'Bundle created!'
 			});
-			newBundle.save();
 		})
 
 
@@ -85,16 +84,12 @@ module.exports = app => {
 			// there could be alternative ways to calculate this; e.g., divide the discount with an equal amount per shipment...
 			// ... or proportional to the cost of each shipment
 			let updateAmount = req.body.discountAmount * 100;
-			// get an array of shipments (IDs or...?) from the bundle ID
-			let shipmentsToDiscount = await BundleModel.findById(req.params.id);
-			console.log(shipmentsToDiscount);
-			shipmentsToDiscount = shipmentsToDiscount.shipments;
-			console.log(shipmentsToDiscount);
+			// get an array of shipment IDs from the bundle ID
+			let bundleToDiscount = await BundleModel.findById(req.params.id);
 			// map over the array of shipments and perform the discount logic on each shipment
-			shipmentsToDiscount.map(async shipment => {
+			bundleToDiscount.shipments.map(async shipment => {
 				// get the document for the shipment ID
 				let shipmentDoc = await ShipmentModel.findById(shipment);
-				console.log('shipment doc:', shipmentDoc);
 				let newPrice = shipmentDoc.cost.currentPrice - updateAmount;
 				if (newPrice < 0) {
 					newPrice = 0;
@@ -109,7 +104,21 @@ module.exports = app => {
 
 		// add a discount to a bundle (percentage)
 		.put('/bundle/:id/discount/percentage', async (req, res) => {
-			// to do
+			// applying the same percentage discount to each shipment in the bundle
+			let updatePercentage = req.body.discountPercentage;
+			// get an array of shipment IDs from the bundle ID
+			let bundleToDiscount = await BundleModel.findById(req.params.id);
+			// map over the array of shipments and perform the discount logic on each shipment
+			bundleToDiscount.shipments.map(async shipment => {
+				// get the document for the shipment ID
+				let shipmentDoc = await ShipmentModel.findById(shipment);
+				let newPrice = shipmentDoc.cost.currentPrice - (shipmentDoc.cost.currentPrice * updatePercentage / 100);
+				shipmentDoc.cost.set({currentPrice: newPrice});
+				shipmentDoc.save();
+			});
+			res.status(200).json({
+				message: 'Bundle discounted by a percentage!'
+			});
 		})
 
 		// get a list of a courier's bundles
