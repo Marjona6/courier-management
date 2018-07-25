@@ -2,6 +2,9 @@
   "name": "courier-management",
   "version": "1.0.0",
   "description": "Shipment management system prototype for Saloodo.",
+  "engines": {
+    "node": "10.6.0"
+  }
   "main": "server.js",
   "scripts": {
     "dev": "NODE_ENV=development && run-p devtask:**",
