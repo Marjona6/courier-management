@@ -1,1 +1,1 @@
-exports.SERVER_URL = process.env.SERVER_URL || 'http://localhost:4877';
+exports.SERVER_URL = process.env.SERVER_URL || 'https://courier-shipment-management.herokuapp.com/' || 'http://localhost:4877';
