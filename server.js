@@ -19,9 +19,9 @@ app.use(bodyParser.text());
 app.use(bodyParser.json({type: 'application/json'}));
 app.use(cors({
 	origin: (origin, cb) => {
-		if (!origin) {
-			return cb(new Error('Empty origin is not allowed!'));
-		}
+		// if (!origin) {
+		// 	return cb(new Error('Empty origin is not allowed!'));
+		// }
 		const isDevEnv = origin == 'http://localhost:3000';
 		if (isDevEnv) {
 			cb(null, true);
