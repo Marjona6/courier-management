@@ -2,10 +2,8 @@ const express = require('express');
 const app = express();
 
 const mongoose = require('mongoose');
-const session = require('express-session');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const port = process.env.PORT || 4877;
 
@@ -34,39 +32,6 @@ app.use(cors({
 	'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
 	'preflightContinue': false
 }));
-
-app.use(cookieParser());
-
-app.use(session({
-	key: 'saloodo_user_id',
-	secret: 'shipment77',
-	resave: false,
-	saveUninitialized: false,
-	cookie: {
-		expires: 600000
-	}
-}));
-
-app.use((req, res, next) => {
-	if (req.cookies.saloodo_user_id && !req.session.user) {
-		res.clearCookie('saloodo_user_id');
-	}
-	next();
-});
-
-const sessionChecker = (req, res, next) => {
-	if (req.session.user && req.cookies.saloodo_user_id) {
-		// for now, only couriers will log in?
-		// if courier...
-		res.redirect('/todo'); // is this going to work?
-		// if manager...
-		// res.redirect('/dashboard');
-	} else {
-		// managers should be redirected to dashboard
-		res.redirect('/login'); // ???
-		next();
-	}
-}
 
 require('./routes')(app);
 
