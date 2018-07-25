@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 import addressSchema from './address';
 import costSchema from './cost';
 
-
-const shipmentSchema = new mongoose.Schema({
+export const shipmentSchema = new mongoose.Schema({
 	origin: addressSchema,
 	destination: addressSchema,
 	courier: {type: mongoose.Schema.Types.ObjectId, ref: 'Courier'},
@@ -12,7 +11,8 @@ const shipmentSchema = new mongoose.Schema({
 	assignedTimestamp: Date,
 	pickedUpTimestamp: Date,
 	deliveredTimestamp: Date,
-	cost: costSchema
+	cost: costSchema,
+	bundle: {type: mongoose.Schema.Types.ObjectId, ref: 'Bundle'},
 });
 
 let ShipmentModel;

@@ -26,6 +26,10 @@ Shipment management system prototype for Saloodo.
 
 ## API
 
+## Bundles: Proposed Front-End Treatment
+
+Currently, shipments are displayed individually. Bundles can be displayed as grouped shipments, visually identified as a bundle by spacing and borders to set the group apart from other groups and individual shipments.
+
 ## Development Roadmap
 
 1. Use MobX (https://mobx.js.org/getting-started.html) to manage state in front end.

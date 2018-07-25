@@ -4,7 +4,7 @@ import addressSchema from '../models/address';
 import costSchema from '../models/cost';
 
 const mongoose = require('mongoose');
-const faker = require('faker');
+const faker = require('faker'); // for dev/testing purposes only
 const { body } = require('express-validator/check');
 // add more from express-validator to validate all data for creating docs
 
@@ -19,9 +19,10 @@ module.exports = app => {
 
 		// assign a shipment to a courier
 		.put('/shipment/courier/assign/:id', async (req, res) => {
-			let courier = req.body.courier; // make sure front end sends it this way
 			ShipmentModel
-				.findByIdAndUpdate(req.params.id, {$set: {courier: courier, status: 'ASSIGNED', assignedTimestamp: req.body.timestamp}})
+				// update the shipment document with the assigned courier and associated data
+				.findByIdAndUpdate(req.params.id, {$set: {courier: req.body.courier, status: 'ASSIGNED', assignedTimestamp: req.body.timestamp}})
+				// update the courier document with the assigned shipment
 				.then( async () => {
 					let courierDoc = await CourierModel.findById(req.body.courier);
 					let shipmentList = courierDoc.shipments;
