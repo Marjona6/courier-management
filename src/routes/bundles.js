@@ -81,11 +81,30 @@ module.exports = app => {
 
 		// add a discount to a bundle (amount)
 		.put('/bundle/:id/discount/amount', async (req, res) => {
-			// to do
+			// assuming that when a bundle is discounted by an amount, the amount is deducted from each individual shipment
+			// there could be alternative ways to calculate this; e.g., divide the discount with an equal amount per shipment...
+			// ... or proportional to the cost of each shipment
 			let updateAmount = req.body.discountAmount * 100;
 			// get an array of shipments (IDs or...?) from the bundle ID
+			let shipmentsToDiscount = await BundleModel.findById(req.params.id);
+			console.log(shipmentsToDiscount);
+			shipmentsToDiscount = shipmentsToDiscount.shipments;
+			console.log(shipmentsToDiscount);
 			// map over the array of shipments and perform the discount logic on each shipment
-			// let shipmentDoc = await 
+			shipmentsToDiscount.map(async shipment => {
+				// get the document for the shipment ID
+				let shipmentDoc = await ShipmentModel.findById(shipment);
+				console.log('shipment doc:', shipmentDoc);
+				let newPrice = shipmentDoc.cost.currentPrice - updateAmount;
+				if (newPrice < 0) {
+					newPrice = 0;
+				}
+				shipmentDoc.cost.set({currentPrice: newPrice});
+				shipmentDoc.save();
+			});
+			res.status(200).json({
+				message: 'Bundle discounted by an amount!'
+			});
 		})
 
 		// add a discount to a bundle (percentage)
@@ -100,6 +119,7 @@ module.exports = app => {
 		})
 
 	// COURIER tasks
+	// TODO!
 		// register a bundle as picked up
 		.put('/bundle/:id/picked-up', async (req, res) => {
 
