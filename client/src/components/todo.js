@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import axios from 'axios';
+import config from '../config';
 import './dashboard.css';
 
 import Header from './header';
@@ -33,18 +34,15 @@ export default class Todo extends Component {
 	}
 
 	  getMyShipments() {
-		    let userId = '5b51abb66423f83a82678516';
+		    let userId = '5b51abb66423f83a82678516'; // only for demo purposes! will be gotten from session after user logs in in production version
 		    axios.request({
 		      method: 'GET',
-		      url: 'http://localhost:4877/shipments/courier/' + userId,
+		      url: config.SERVER_URL + '/shipments/courier/' + userId,
 		    })
 		    .then(response => {
-		      console.log('response:', response);
 		      this.setState({
 		        shipments: response.data,
 		        isLoading: false
-		      }, () => {
-		        console.log(this.state.shipment);
 		      });
 		      if (response.data.length === 0) {
 		      	this.setState({
@@ -58,7 +56,6 @@ export default class Todo extends Component {
 		}
 
 	componentWillMount() {
-		console.log('getting my shipments...');
 		this.getMyShipments();
 	}
 

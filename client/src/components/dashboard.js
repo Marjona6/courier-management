@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import axios from 'axios';
+import config from '../config';
 import './dashboard.css';
 
 import Header from './header';
@@ -39,7 +40,7 @@ export default class Dashboard extends Component {
 	getAllShipments() {
 	    axios.request({
 	      method: 'GET',
-	      url: 'http://localhost:4877/shipments',
+	      url: config.SERVER_URL + '/shipments',
 	    })
 	    .then(response => {
 	      this.setState({
@@ -53,42 +54,22 @@ export default class Dashboard extends Component {
 	}
 
 	async prepareToAssignShipment(event) {
-		// event.preventDefault();
 		await this.getCouriers();
 		console.log('preparing to assign...');
 
 	}
 
-	assignShipment(event, id, courier) {
-		// event.preventDefault();
-		// axios.request({
-	 //      method: 'PUT',
-	 //      url: 'http://localhost:4877/shipment/courier/assign/' + id,
-	 //      data: {timestamp: new Date(), courier: courier},
-	 //    })
-	 //    .then(response => {
-	 //      this.updateShipmentForDisplay(id);
-	 //    })
-	 //    .catch(error => {
-	 //      console.error(error);
-	 //    });
-		
+	assignShipment(event, id, courier) {		
 	}
 
 	discountShipment(event) {
-		event.preventDefault();
-		console.log('discounting shipment');
-		// show a modal asking whether by amount or percentage and letting user input amount or percentage
-		// axios request to apply the discount
-		// update the data that is displayed (cost)
-		// update the data displayed to courier(s)
 	}
 
 	async getCouriers() {
 	    console.log('getting courier list...');
 	    await axios.request({
 	      method: 'GET',
-	      url: 'http://localhost:4877/couriers'
+	      url: config.SERVER_URL + '/couriers'
 	    })
 	    .then(response => {
 	      this.setState({
@@ -101,7 +82,6 @@ export default class Dashboard extends Component {
 	}
 
 	componentWillMount() {
-		console.log('getting all...');
 		this.getAllShipments();
 	}
 

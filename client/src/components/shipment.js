@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import config from '../config';
 import './shipment.css';
 
 import Button from './button';
@@ -23,21 +24,17 @@ export default class Shipment extends Component {
 
     this.state = {
       currentModal: null,
-      // isPickedUp: false,
-      // isDelivered: false,
       shipment: this.props.shipment,
 
     }
   }
 
   updateShipmentForDisplay(id) {
-    console.log('updating shipment for display');
     axios.request({
       method: 'GET',
-      url: 'http://localhost:4877/shipment/' + id,
+      url: config.SERVER_URL + '/shipment/' + id,
     })
     .then(response => {
-      console.log(response);
       this.setState({
         shipment: response.data,
       })
@@ -48,11 +45,10 @@ export default class Shipment extends Component {
   }
 
   assignShipment(event, id, courier) {
-    console.log(id, courier);
     // need to get courier id--manager selects from a list of all couriers
     axios.request({
       method: 'PUT',
-      url: 'http://localhost:4877/shipment/courier/assign/' + id,
+      url: config.SERVER_URL + '/shipment/courier/assign/' + id,
       data: {timestamp: new Date(), courier: courier},
     })
     .then(response => {
@@ -65,7 +61,6 @@ export default class Shipment extends Component {
   }
 
   discountShipment(event, id) {
-    console.log('discounting...', this.state.discountType);
     if (!this.state.amountDiscount && !this.state.percentageDiscount) {
       alert('Please enter either a percentage or an amount for the discount.');
     }
@@ -75,7 +70,7 @@ export default class Shipment extends Component {
     else if (this.state.discountType === 'percentage') {
       axios.request({
         method: 'PUT',
-        url: 'http://localhost:4877/shipment/' + id + '/discount/percentage',
+        url: config.SERVER_URL + '/shipment/' + id + '/discount/percentage',
         data: { discountPercentage: this.state.percentageDiscount },
       })
       .then(response => {
@@ -89,7 +84,7 @@ export default class Shipment extends Component {
     else if (this.state.discountType === 'amount') {
       axios.request({
         method: 'PUT',
-        url: 'http://localhost:4877/shipment/' + id + '/discount/amount',
+        url: config.SERVER_URL + '/shipment/' + id + '/discount/amount',
         data: { discountAmount: this.state.amountDiscount },
       })
       .then(response => {
@@ -106,14 +101,11 @@ export default class Shipment extends Component {
     // register pickup timestamp and order status change
     axios.request({
       method: 'PUT',
-      url: 'http://localhost:4877/shipment/' + id + '/pickedup',
+      url: config.SERVER_URL + '/shipment/' + id + '/pickedup',
       data: {timestamp: new Date()},
     })
     .then(response => {
       this.updateShipmentForDisplay(id);
-      this.setState({
-        isPickedUp: true,
-      });
     })
     .catch(error => {
       console.error(error);
@@ -124,14 +116,11 @@ export default class Shipment extends Component {
     // register delivery timestamp and order status change
     axios.request({
       method: 'PUT',
-      url: 'http://localhost:4877/shipment/' + id + '/delivered',
+      url: config.SERVER_URL + '/shipment/' + id + '/delivered',
       data: {timestamp: new Date()},
     })
     .then(response => {
       this.updateShipmentForDisplay(id);
-      this.setState({
-        isDelivered: true,
-      });
     })
     .catch(error => {
       console.error(error);
@@ -165,19 +154,14 @@ export default class Shipment extends Component {
       this.handleModalCloseRequest();
       return;
     }
-    // this.props.getCouriers(); // put this somewhere else!
     this.setState({
       currentModal: val,
-    }, () => {
-      console.log('state is now:', this.state, val);
     });
   }
     
   handleModalCloseRequest(event) {
     this.setState({
       currentModal: null,
-    }, () => {
-      console.log('current state of modal:', this.state.currentModal);
     });
   }
 
